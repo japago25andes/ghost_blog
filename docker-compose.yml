@@ -1,0 +1,98 @@
+# Entorno de pruebas de Ghost. La configuración (versiones, puertos,
+# credenciales) está en el archivo .env.
+
+services:
+  # ── Ghost: sitio público y panel de administración ────────────────
+  ghost:
+    image: ghost:${GHOST_VERSION}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    ports:
+      - "${GHOST_PORT}:2368"
+    environment:
+      url: ${GHOST_URL}
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: ${MYSQL_USER}
+      database__connection__password: ${MYSQL_PASSWORD}
+      database__connection__database: ${MYSQL_DATABASE}
+      # Todo el correo de Ghost va a Mailpit (nunca sale a internet)
+      mail__transport: SMTP
+      mail__from: "Ghost Pruebas <noreply@ghost.test>"
+      mail__options__host: mailpit
+      mail__options__port: 1025
+      security__staffDeviceVerification: ${STAFF_DEVICE_VERIFICATION}
+    volumes:
+      - ghost-content:/var/lib/ghost/content
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:2368/ghost/api/admin/site/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+
+  # ── MySQL: base de datos de Ghost ─────────────────────────────────
+  db:
+    image: mysql:${MYSQL_VERSION}
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ghost-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  # ── Mailpit: buzón de correo de pruebas (http://localhost:8025) ──
+  mailpit:
+    image: axllent/mailpit:${MAILPIT_VERSION}
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT}:8025"
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  # ── Adminer: visor web de la base de datos (http://localhost:8082) ─
+  adminer:
+    image: adminer:${ADMINER_VERSION}
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${ADMINER_PORT}:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+
+  # ── Seeder: la primera vez crea el administrador, el staff, los
+  #    miembros y los posts de prueba. Después no hace nada. ─────────
+  seed:
+    image: node:22.20-alpine
+    restart: "no"
+    network_mode: "service:ghost"
+    depends_on:
+      ghost:
+        condition: service_healthy
+    environment:
+      GHOST_URL: ${GHOST_URL}
+      SITE_TITLE: ${SITE_TITLE}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+      MAILPIT_URL: http://mailpit:8025
+    volumes:
+      - ./seed:/seed:ro
+    command: ["node", "/seed/seed.mjs"]
+
+volumes:
+  ghost-content:
+  ghost-db:

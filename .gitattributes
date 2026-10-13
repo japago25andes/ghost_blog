@@ -1,0 +1,4 @@
+# Finales de línea: los .bat necesitan CRLF (Windows) y los .sh necesitan LF (macOS/Linux)
+* text=auto
+*.bat text eol=crlf
+*.sh text eol=lf

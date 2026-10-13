@@ -1,0 +1,11 @@
+# Copias de seguridad locales de cada estudiante
+backups/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Nota: el archivo .env SÍ se sube a propósito (entorno de pruebas con credenciales de prueba).
