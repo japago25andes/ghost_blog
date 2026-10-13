@@ -32,6 +32,7 @@ Con un solo comando cada estudiante levanta en su ordenador:
 13. [Comandos útiles](#-comandos-útiles)
 14. [Estructura del proyecto](#-estructura-del-proyecto)
 15. [Solución de problemas](#-solución-de-problemas)
+16. [📝 Actividad 1: Conociendo Ghost](#-actividad-1-conociendo-ghost)
 
 ---
 
@@ -495,3 +496,80 @@ ghost_blog/
 | Las claves de API ya no funcionan | Se hizo un reset | Consulta las nuevas en *Settings → Integrations* |
 | En macOS/Linux: `permission denied` al ejecutar un `.sh` | Falta el permiso de ejecución | `chmod +x *.sh` |
 | En los registros: *"Traffic Analytics service is not configured"* | Servicio opcional de Ghost 6 | Es normal; no afecta |
+
+---
+
+## 📝 Actividad 1: Conociendo Ghost
+
+**Objetivo:** familiarizarte con la aplicación antes de probarla. No se puede probar bien lo que no se conoce: entender **para qué sirve**, **quién la usa** y **cómo funciona** es el primer paso para diseñar buenas pruebas.
+
+- **Modalidad:** individual.
+- **Entrega:** **a mano**, en papel.
+
+> 💡 Puedes crear, editar y borrar todo lo que quieras mientras exploras. Al terminar, ejecuta `reset.bat` / `./reset.sh` y todo vuelve al estado inicial.
+
+### Parte 1. ¿Qué es Ghost?
+
+1. ¿Qué es Ghost y para qué está hecho? Explícalo con tus palabras.
+2. ¿Cuál es su objetivo principal? ¿Qué problema resuelve y a quién?
+3. ¿Quiénes son sus usuarios? Identifica al menos tres tipos de personas que interactúan con la aplicación.
+4. ¿Ghost es software libre o comercial? ¿Qué implica que sea de código abierto?
+5. Menciona dos aplicaciones similares a Ghost y una diferencia importante con cada una.
+
+### Parte 2. Recorrido como visitante (sin iniciar sesión)
+
+6. Recorre el sitio público (http://localhost:2368). ¿Qué secciones y elementos encontraste?
+7. ¿Qué puede hacer un visitante sin registrarse?
+8. ¿Funciona la búsqueda? ¿Qué pasa si buscas un texto que no existe?
+
+### Parte 3. Recorrido como miembro (lector)
+
+9. Inicia sesión como `miembro1@ghost.test` desde el portal. Describe el proceso paso a paso. ¿Por qué no hay contraseña?
+10. ¿Qué correo recibiste en Mailpit (http://localhost:8025)? ¿Qué dos formas de acceso ofrece?
+11. Registra un miembro nuevo con un correo inventado. ¿Qué pasos seguiste y qué viste en Mailpit?
+12. ¿Qué puede hacer un miembro que no puede hacer un visitante?
+
+### Parte 4. Recorrido por los roles del staff
+
+13. Inicia sesión en http://localhost:2368/ghost con cada usuario del staff (ver [Usuarios y credenciales](#-usuarios-y-credenciales-de-prueba)) y completa la tabla con **Sí** o **No**:
+
+| Acción | Owner | Administrator | Super Editor | Editor | Author | Contributor |
+|---|---|---|---|---|---|---|
+| Crear un post | | | | | | |
+| Publicar un post | | | | | | |
+| Editar posts de otros | | | | | | |
+| Ver y gestionar miembros | | | | | | |
+| Invitar staff | | | | | | |
+| Cambiar ajustes del sitio | | | | | | |
+| Crear etiquetas | | | | | | |
+
+14. ¿Qué diferencias de menú y de opciones encontraste entre los roles? Descríbelas.
+15. ¿Por qué crees que existen tantos roles? ¿Qué riesgo habría si un Contributor pudiera publicar?
+
+### Parte 5. Funcionalidades principales
+
+16. Como Owner, crea un post con título, texto, una imagen y una etiqueta. Publícalo y comprueba que aparece en el sitio público. Describe los pasos que seguiste.
+17. Haz un inventario de las funcionalidades principales de Ghost (por ejemplo: posts, páginas, etiquetas, miembros, staff, newsletters, diseño, integraciones…). Para cada una, explica en una línea para qué sirve.
+18. ¿Qué tres funcionalidades te parecen **más importantes** para el negocio? ¿Por qué?
+
+### Parte 6. Mirada de calidad
+
+19. ¿Qué funcionalidades consideras **más críticas**, es decir, cuáles causarían más daño si fallaran? Justifica tu respuesta.
+20. Propón **5 escenarios de prueba** con este formato:
+
+| # | Funcionalidad | Escenario | Pasos | Resultado esperado |
+|---|---|---|---|---|
+| 1 | Inicio de sesión | Login con contraseña incorrecta | … | … |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+
+21. ¿Encontraste algún **comportamiento extraño, error o algo confuso** para el usuario? Descríbelo con los pasos para reproducirlo.
+22. Además de que "funcione", ¿qué otros aspectos de calidad observaste? Por ejemplo: rapidez, facilidad de uso, claridad de los mensajes de error, apariencia en distintos tamaños de pantalla o accesibilidad.
+23. ¿Qué partes de Ghost automatizarías primero con Playwright y por qué?
+
+### Parte 7. Reflexión
+
+24. ¿Qué fue lo que más te llamó la atención de la aplicación?
+25. ¿Qué te resultó más difícil de entender o de usar?
